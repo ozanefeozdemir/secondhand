@@ -1,0 +1,204 @@
+public class Book {
+private String title;
+private String author;
+private String ISBN;
+private int totalCopies;
+private int availableCopies;
+
+public Book(String t, String a, String i, int tc, int ac){
+setTitle( t );
+setAuthor( a );
+setISBN( i );
+setTotalCopies( tc );
+setAvailableCopies( ac );
+}
+
+public void setTitle(String t) {
+title = t;
+}
+
+public String getTitle() {
+return title;
+}
+
+public void setAuthor(String a) {
+author = a;
+}
+
+public String getAuthor() {
+return author;
+}
+
+public void setISBN(String i) {
+ISBN = i;
+}
+
+public String getISBN() {
+return ISBN;
+}
+
+public void setTotalCopies(int tc) {
+totalCopies = tc;
+}
+
+public int getTotalCopies() {
+return totalCopies;
+}
+
+public void setAvailableCopies(int ac) {
+availableCopies = ac;
+}
+
+public int getAvailableCopies() {
+return availableCopies;
+}
+
+public void borrowBook(){
+if(getAvailableCopies() > 0)
+setAvailableCopies(getAvailableCopies() - 1);
+else
+System.out.println("There arent any available copies!");
+}
+
+public void returnBook(){
+setAvailableCopies(getAvailableCopies() + 1);
+}
+
+
+}
+
+
+import java.util.ArrayList;
+
+public class Member {
+private String name;
+private String memberID;
+private ArrayList borrowedBooks;
+
+public Member(String n, String id){
+setName( n );
+setMemberID( id );
+borrowedBooks = new ArrayList();
+}
+
+public void setName(String n) {
+name = n;
+}
+
+public String getName() {
+return name;
+}
+
+public void setMemberID(String id) {
+memberID = id;
+}
+
+public String getMemberID() {
+return memberID;
+}
+
+public void setBorrowedBooks(ArrayList books) {
+borrowedBooks = books;
+}
+
+public ArrayList getBorrowedBooks() {
+return borrowedBooks;
+}
+
+public void borrowBook(Book book){
+getBorrowedBooks().add(book.getTitle() + " by " + book.getAuthor());
+book.borrowBook();
+}
+
+public void returnBook(Book book){
+for(String b : getBorrowedBooks()){
+if(b.equals(book.getTitle() + " by " + book.getAuthor())){
+getBorrowedBooks().remove(b);
+}
+}
+book.returnBook();
+}
+
+public void viewBorrowedBooks(){
+for(String book : getBorrowedBooks()){
+System.out.printf("%s\n",book);
+}
+}
+}
+
+Kerem Kafes
+Kerem Kafes
+08:27
+import java.util.ArrayList;
+
+public class Librarian extends Member {
+public Librarian(String n, String id){
+super(n, id);
+}
+
+public void addBook(Book book, ArrayList library){
+library.add(book);
+System.out.printf("Librarian added: %s by %s\n", book.getTitle(), book.getAuthor());
+}
+
+public void removeBook(Book book, ArrayListlibrary){
+if(library.contains(book)){
+library.remove(book);
+System.out.println("Book removed succesfully: " +book.getTitle());
+}
+else{
+System.out.println("Book not found in the library.");
+}
+}
+}
+
+Kerem Kafes
+Kerem Kafes
+08:28
+import java.util.ArrayList;
+
+public class Test {
+public static void main(String[] args) {
+ArrayList library = new ArrayList<>();
+Member members[] = new Member[4];
+members[0] = new Member("Ali", "234");
+members[1] = new Member("Ahmet", "567");
+members[2] = new Member("Mehmet", "890");
+members[3] = new Librarian("Ayşe", "1");
+
+Book book1 = new Book("C", "Mehmet Dikmen", "1111", 10, 10);
+Book book2 = new Book("C++", "Ogul Gocmen", "2222", 7 , 7);
+Book book3 = new Book("Java", "Kerem Kafes", "3333", 2, 2);
+
+for(Member currentMember : members){
+if(currentMember instanceof Librarian){
+Librarian member = (Librarian) currentMember;
+member.addBook(book1, library);
+member.addBook(book2, library);
+member.addBook(book3, library);
+System.out.println("Books are added to the library.");
+}
+else
+System.out.println("As this member isnt the librarian books are not added.");
+}
+
+for(Member currentMember : members){
+for(int i=0; i<3; i++)
+currentMember.borrowBook(library.get(i));
+}
+
+for(Member currentMember : members){
+if(currentMember instanceof Librarian){
+Librarian member = (Librarian) currentMember;
+member.removeBook(book1, library);
+member.removeBook(book2, library);
+member.removeBook(book3, library);
+System.out.println("Books are removed to the library.");
+}
+else
+System.out.println("As this member isnt the librarian books are not removed.");
+}
+
+}
+}
+
